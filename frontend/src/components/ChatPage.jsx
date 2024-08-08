@@ -4,7 +4,7 @@ import ChatFooter from './ChatFooter';
 import { useParams } from 'react-router-dom';
 import '../styles/chatPage.css';
 
-const ChatPage = ({ socket }) => {
+const ChatPage = ({ socket, setNewMessages }) => {
   const [messages, setMessages] = useState([]);
   const [typingStatus, setTypingStatus] = useState("");
   const lastMessageRef = useRef(null);
@@ -23,6 +23,7 @@ const ChatPage = ({ socket }) => {
 
     socket.on("receive_message", (data) => {
       setMessages(prevMessages => [...prevMessages, data]);
+      setNewMessages(false);
     });
 
     socket.on("typing", (data) => {
@@ -36,7 +37,7 @@ const ChatPage = ({ socket }) => {
       socket.off("chatHistory");
       socket.off("typing");
     };
-  }, [socket, roomId]);
+  }, [socket, roomId, setNewMessages]);
 
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });

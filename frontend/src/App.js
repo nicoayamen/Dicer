@@ -24,6 +24,7 @@ function App() {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [newMessages, setNewMessages] = useState(false);
 
   useEffect(() => {
     const user = window.localStorage.getItem('userid');
@@ -33,6 +34,16 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    socket.on('newMessage', () => {
+      setNewMessages(true);
+    });
+
+    return () => {
+      socket.off('newMessage');
+    };
+  }, []);
+
   //get current path, define where navbar should be hidden
   const location = useLocation();
   const hideNavBarPaths = ['/'];
@@ -40,23 +51,23 @@ function App() {
   const showNavBar = !hideNavBarPaths.includes(location.pathname);
 
   return (
-      <div className="App">
+    <div className="App">
 
-        {showNavBar && <NavBar login={login} setLogin={setLogin} />}
+      {showNavBar && <NavBar login={login} setLogin={setLogin} newMessages={newMessages} />}
 
-        <Routes>
-          <Route path='/home' element={<Home socket={socket} />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/profile/:userId' element={<Profile />} />
-          <Route path="/" element={<LoginPage email={email} setEmail={setEmail} password={password} setPassword={setPassword} error={error} setError={setError} setLogin={setLogin} />} />
-          <Route path="/signup" element={<Signup setLogin={setLogin} />} />
-          <Route path="/profile/:userId/edit" element={<EditProfile />} />
-          <Route path="/profile/:userId/delete" element={<DeleteProfile />} />
-          <Route path="/chat/:roomId" element={<ChatPage socket={socket} />} />
-          <Route path='/profile/match' element={<Match />} />
-          <Route path='/profile/messages' element={<Messages />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path='/home' element={<Home socket={socket} />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/profile/:userId' element={<Profile />} />
+        <Route path="/" element={<LoginPage email={email} setEmail={setEmail} password={password} setPassword={setPassword} error={error} setError={setError} setLogin={setLogin} />} />
+        <Route path="/signup" element={<Signup setLogin={setLogin} />} />
+        <Route path="/profile/:userId/edit" element={<EditProfile />} />
+        <Route path="/profile/:userId/delete" element={<DeleteProfile />} />
+        <Route path="/chat/:roomId" element={<ChatPage socket={socket} setNewMessages={setNewMessages}/>} />
+        <Route path='/profile/match' element={<Match />} />
+        <Route path='/profile/messages' element={<Messages />} />
+      </Routes>
+    </div>
   );
 }
 

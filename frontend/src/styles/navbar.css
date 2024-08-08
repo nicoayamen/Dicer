@@ -40,3 +40,19 @@
   object-fit: cover;
   margin-left: 1rem;
 }
+
+.nav-item {
+  position: relative;
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.red-dot {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  height: 10px;
+  width: 10px;
+  background-color: red;
+  border-radius: 50%;
+}

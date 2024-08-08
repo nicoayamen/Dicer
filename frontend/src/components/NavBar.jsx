@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import '../styles/navbar.css';
 
 const NavBar = (props) => {
-  const { login, setLogin } = props;
+  const { login, setLogin, newMessages } = props;
   const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
   const userId = window.localStorage.getItem('userid');
@@ -51,7 +51,10 @@ const NavBar = (props) => {
 
       {login && profile && (
         <div className='navbar-links'>
-          <Link to='/profile/messages'>Messages</Link>
+          <Link to='/profile/messages' className='nav-item'>
+            Messages
+            {newMessages && <span className="red-dot"></span>}
+          </Link>
           <button onClick={handleLogOut} className='navbar-logout-button'>Sign Out</button>
           <Link to={`/profile/${userId}`}>
             <img
